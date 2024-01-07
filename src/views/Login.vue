@@ -1,47 +1,132 @@
 <template>
-    <div class="container mt-5">
-        <div class="text-center mb-3">
-            <h1 class="text-black">Welcome!</h1>
-            <p class="text-lead text-black">Login to view your clients</p>
-        </div>
-        <div class="card mx-auto mt-3" style="max-width: 400px;">
-            <div class="card-body">
-                <ul v-if="Object.keys(this.errorList).length > 0" class="alert alert-warning">
-                    <li class="mb-0 ms-3" v-for="(error, index) in errorList" :key="index">
-                        {{ error[0] }}
-                    </li>
-                </ul>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email address</label>
-                    <input type="email" v-model="user.email" id="email" class="form-control" prepend-icon="ni ni-email-83"
-                        placeholder="Enter your email">
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" v-model="user.password" id="password" class="form-control"
-                        placeholder="Enter your password">
-                </div>
+    <div class="account-pages my-5 pt-sm-5">
+        <div class="container">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-5">
+                    <div class="card">
+                        <div class="card-body p-4">
+                            <div class="text-center mt-2">
+                                <h5 class="text-primary">Welcome !</h5>
+                                <p class="text-muted">Sign in to continue CRM.</p>
+                            </div>
+                            <div class="p-2 mt-4">
+                                <div class="card-body">
+                                    <form @submit.prevent="submitForm">
+                                        <div class="form-group mb-3">
+                                            <label for="email">Email Address</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><font-awesome-icon
+                                                        :icon="['fas', 'envelope']" /></span>
+                                                <input type="email" v-model="user.email" id="email" class="form-control"
+                                                    name="email" placeholder="Enter Email address">
+                                            </div>
+                                            <small class="text-danger" v-if="submitted && !user.email.required">
+                                                Email is required.
+                                            </small>
+                                            <small class="text-danger" v-if="submitted && !user.email.valid">
+                                                Please enter a valid email address.
+                                            </small>
+                                        </div>
 
-                <div class="text-center">
-                    <button type="submit" @click="loginUser" class="btn btn-primary">Login</button>
+                                        <div class="form-group mb-3">
+                                            <label for="password">Password</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    <font-awesome-icon :icon="['fas', 'lock']" />
+                                                </span>
+                                                <input :type="showPassword ? 'text' : 'password'" class="form-control"
+                                                    name="password" id="password" placeholder="Enter Password"
+                                                    v-model="user.password" />
+
+                                                <button type="button" class="btn btn-light"
+                                                    @click="togglePasswordVisibility">
+                                                    <font-awesome-icon :icon="showPassword ? 'eye-slash' : 'eye'" />
+                                                </button>
+                                            </div>
+                                            <small class="text-danger" v-if="submitted && !user.password.required">
+                                                Password is required.
+                                            </small>
+                                            <small class="text-danger"
+                                                v-if="submitted && user.password && !user.password.valid">
+                                                Password must be at least 8 characters.
+                                            </small>
+                                        </div>
+
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="remember"
+                                                name="remember">
+                                            <label class="custom-control-label" for="remember"
+                                                style="margin-left: 5px;">Remember
+                                                me</label>
+                                        </div>
+
+
+                                        <div class="mt-3 text-right">
+                                            <button class="btn btn-primary w-sm waves-effect waves-light" type="submit">Log
+                                                In</button>
+                                        </div>
+
+                                        <div class="mt-4 text-center">
+                                            <p class="mb-0">Don't have an account ? <a href=""
+                                                    class="font-weight-medium text-primary"> Signup now </a> </p>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-5 text-center">
+                            <p>&copy; {{ currentYear }} ARTFUNDI. Crafted by Taylor Lokombe</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
 <script>
 import axios from 'axios';
+import { required, email, minLength } from '@vuelidate/validators';
+
 export default {
     data() {
         return {
-            errorList: [],
             user: {
                 email: '',
                 password: '',
             },
+            showPassword: false,
+            currentYear: new Date().getFullYear(),
+            submitted: false,
         };
     },
+    validations: {
+        user: {
+            email: {
+                required,
+                email,
+            },
+            password: {
+                required,
+                minLength: minLength(8),
+            },
+        },
+    },
     methods: {
+        togglePasswordVisibility() {
+            this.showPassword = !this.showPassword;
+        },
+        submitForm() {
+            this.submitted = true;
+
+            if (this.$v) {
+                this.$v.$touch();
+                if (this.$v.$invalid) {
+                    return;
+                }
+            }
+
+        },
         async loginUser() {
 
         },
@@ -53,5 +138,31 @@ export default {
 <style>
 body {
     background-color: #F6C7B0;
+}
+
+.text-primary {
+    color: #04ABC1 !important;
+}
+
+.btn-primary {
+    background-color: #04ABC1;
+    border-color: #04ABC1;
+}
+
+.btn-primary:hover {
+    background-color: #04ABC1 !important;
+    border-color: #04ABC1 !important;
+}
+
+.text-light {
+    color: #04ABC1;
+}
+
+.text-light:hover {
+    text-decoration: underline;
+}
+
+.custom-control-label {
+    margin-left: 10px;
 }
 </style>
