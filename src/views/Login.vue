@@ -11,7 +11,7 @@
                             </div>
                             <div class="p-2 mt-4">
                                 <div class="card-body">
-                                    <form @submit.prevent="submitForm">
+                                    <form @submit.prevent="loginUser">
                                         <div class="form-group mb-3">
                                             <label for="email">Email Address</label>
                                             <div class="input-group">
@@ -21,11 +21,12 @@
                                                     name="email" placeholder="Enter Email address">
                                             </div>
                                             <small class="text-danger" v-if="submitted && !user.email.required">
-                                                Email is required.
+                                                Email is required and must be a valid email address.
                                             </small>
-                                            <small class="text-danger" v-if="submitted && !user.email.valid">
-                                                Please enter a valid email address.
+                                            <small class="text-danger" v-if="!user.email.valid">
+                                                {{ error.email }}
                                             </small>
+
                                         </div>
 
                                         <div class="form-group mb-3">
@@ -44,11 +45,10 @@
                                                 </button>
                                             </div>
                                             <small class="text-danger" v-if="submitted && !user.password.required">
-                                                Password is required.
+                                                Password is required must be at least 8 characters.
                                             </small>
-                                            <small class="text-danger"
-                                                v-if="submitted && user.password && !user.password.valid">
-                                                Password must be at least 8 characters.
+                                            <small class="text-danger" v-if="!user.password.valid">
+                                                {{ error.password }}
                                             </small>
                                         </div>
 
@@ -98,6 +98,10 @@ export default {
             showPassword: false,
             currentYear: new Date().getFullYear(),
             submitted: false,
+            error: {
+                password: '',
+                email: '',
+            },
         };
     },
     validations: {
@@ -116,9 +120,10 @@ export default {
         togglePasswordVisibility() {
             this.showPassword = !this.showPassword;
         },
-        submitForm() {
-            this.submitted = true;
+        async loginUser() {
 
+            this.submitted = false;
+            this.error = [];
             if (this.$v) {
                 this.$v.$touch();
                 if (this.$v.$invalid) {
@@ -126,9 +131,36 @@ export default {
                 }
             }
 
-        },
-        async loginUser() {
+            try {
+                const response = await axios.post('http://localhost:8000/api/login', this.user);
+                console.log(response);
+                this.$router.push({ name: 'dashboard' });
+            }
+            catch (error) {
+                console.log('Error during login:', error);
+                this.submitted = true;
+                if (this.$v) {
+                    this.$v.$touch();
+                }
+                if (error.response) {
+                    console.log(error.response);
 
+                    if (error.response.status === 422) {
+                        error.response.data.error;
+
+                    } else if (error.response.status === 401) {
+
+                        this.submitted = false;
+                        if (this.user.password) {
+                            this.error.password = error.response.data.error;
+                        } else if (this.user.email) {
+                            this.error.email = error.response.data.error;
+                        }
+                    }
+                } else if (error.request) {
+                    console.log('Error in request:', error.request);
+                }
+            }
         },
     },
 };
