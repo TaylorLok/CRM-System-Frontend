@@ -8,10 +8,10 @@
             <br>
                 <form @submit.prevent="searchClients">
                     <div class="input-group mb-3">
-                    <input type="text" v-model="searchTerm" class="form-control" placeholder="Search clients">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit">Search</button>
-                    </div>
+                        <input type="text" v-model="searchTerm" class="form-control" placeholder="Search clients">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -19,19 +19,18 @@
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
                         <thead>
-                            <tr>
-                                <!-- 'uuid','first_name','last_name','id_number','dob','telephone','email_address','status' -->
-                                <th>ID</th>
-                                <th>uuid</th>
-                                <th>FirstName</th>
-                                <th>LastName</th>
-                                <th>ID Number</th>
-                                <th>Date of Birth</th>
-                                <th>Telephone</th>
-                                <th>Email</th>
-                                <th>Status</th>
-                                <th>Created At</th>
-                                <th>Actions</th>
+                            <tr  style="white-space: nowrap; color:#000000">
+                                <th style="font-weight: bold; color: #000000;">ID</th>
+                                <th style="font-weight: bold; color: #000000;">uuid</th>
+                                <th style="font-weight: bold; color: #000000;">FirstName</th>
+                                <th style="font-weight: bold; color: #000000;">LastName</th>
+                                <th style="font-weight: bold; color: #000000;">ID Number</th>
+                                <th style="font-weight: bold; color: #000000;">Date of Birth</th>
+                                <th style="font-weight: bold; color: #000000;">Telephone</th>
+                                <th style="font-weight: bold; color: #000000;">Email</th>
+                                <th style="font-weight: bold; color: #000000;">Status</th>
+                                <th style="font-weight: bold; color: #000000;">Created At</th>
+                                <th style="font-weight: bold; color: #000000;">Actions</th>
                             </tr>
                         </thead>
                         <tbody v-if="this.clients.length > 0">
@@ -44,7 +43,9 @@
                                 <td>{{ client.dob }}</td>
                                 <td>{{ client.telephone }}</td>
                                 <td>{{ client.email_address }}</td>
-                                <td>{{ client.status }}</td>
+                                <td :style="{ color: client.status === 1 ? '#04ABC1' : '#712011' }">
+                                    {{ client.status === 1 ? 'Active' : 'Inactive' }}
+                                </td>
                                 <td>{{ formatDate(client.created_at) }}</td>
                                 <td>
                                     <div class="d-flex">
@@ -60,7 +61,7 @@
                         </tbody>
                         <tbody v-else>
                             <tr>
-                                <td colspan="10" class="text-center">Loading...</td>
+                                <td colspan="11" class="text-center">Loading...</td>
                             </tr>
                         </tbody>          
                     </table>
@@ -74,16 +75,23 @@
     import axios from 'axios'
 
     export default {
-       name: 'clients',
+        name: 'clients',
         data() {
-           return {
-               clients: []
-           }
+            return {
+                clients: []
+            }
         },
-       mounted(){
-         this.getClients();
-       },
-       methods:{
+        mounted(){
+            this.getClients();
+        },
+        watch: {
+            searchTerm(newVal) {
+                if (newVal === '') {
+                    this.getClients();
+                }
+            }
+        },
+        methods:{
            async getClients()
            {
                 try {
@@ -104,8 +112,22 @@
             return `${date.toISOString().slice(0, 19).replace("T", " ")}`;
             },
 
-            searchClients() {
+            async searchClients() {
                 // Implement your search logic here
+                try {
+                    const response = await axios.get(`http://localhost:8000/api/clients/filter/${this.searchTerm}`);
+
+                    this.clients = response.data
+                    console.log(this.clients);
+                    
+                } 
+                catch (error) {
+                    if (error.response.status == 404) {
+                        alert(error.response.data.message);
+                    } else {
+                        alert('An error occurred');
+                    }
+                }
             },
 
             async deleteClient(clientId){
@@ -127,7 +149,7 @@
                     }
                 }
             }
-       }
+        }
     }
 </script>
 <style>
