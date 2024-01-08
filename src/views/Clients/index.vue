@@ -26,7 +26,7 @@
                                 <th>FirstName</th>
                                 <th>LastName</th>
                                 <th>ID Number</th>
-                                <th>DOB</th>
+                                <th>Date of Birth</th>
                                 <th>Telephone</th>
                                 <th>Email</th>
                                 <th>Status</th>
