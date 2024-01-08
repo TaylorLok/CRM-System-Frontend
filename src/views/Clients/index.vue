@@ -60,7 +60,7 @@
                         </tbody>
                         <tbody v-else>
                             <tr>
-                                <td colspan="7" class="text-center">Loading...</td>
+                                <td colspan="10" class="text-center">Loading...</td>
                             </tr>
                         </tbody>          
                     </table>
@@ -84,12 +84,19 @@
          this.getClients();
        },
        methods:{
-            getClients(){
-                axios.get('http://localhost:8000/api/clients')
-                .then(response => {
+           async getClients()
+           {
+                try {
+                    const response = await axios.get(`http://localhost:8000/api/clients`);
+
                     this.clients = response.data
-                    console.log(this.clients)
-                })
+                    console.log(this.clients);
+                    
+                } 
+                catch (error) {
+                    alert(error.response.data.message)
+                }
+                
             },
 
             formatDate(dateTime) {
@@ -101,17 +108,15 @@
                 // Implement your search logic here
             },
 
-            deleteClient(clientId){
-               
+            async deleteClient(clientId){
+
                 if(confirm("Are you sure want to delete this client?")){
-                    console.log(clientId)
-                    axios.delete(`http://localhost:8000/api/delete/client/${clientId}`)
-                    .then(response => {
-                        console.log(response.data)
-                        alert(response.data.message)
+                    try {
+                        const response = await axios.delete(`http://localhost:8000/api/delete/client/${clientId}`);
+                        console.log(response.data);
                         this.getClients()
-                    })
-                    .catch(function (error) {
+                        
+                    } catch (error) {
                         console.log(error.response)
                         if (error.response) 
                         {
@@ -119,7 +124,7 @@
                                 alert(error.response.data.message)
                             }
                         }
-                    })
+                    }
                 }
             }
        }
