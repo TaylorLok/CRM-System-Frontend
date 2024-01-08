@@ -27,3 +27,8 @@ npm run dev
 ```sh
 npm run build
 ```
+### See below is the to the frontend Login details:
+```sh
+email: admin@crm.co.za
+password: password
+```
