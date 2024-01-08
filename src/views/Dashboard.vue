@@ -1,8 +1,13 @@
 <template>
-    <div>
-        <h1>Welcome to my dashboard</h1>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header text-center">
+            <h1>Welcome!</h1>
+            </div>
+        </div>
     </div>
-</template>
-  
-<style scoped></style>
+  </template>
+  <script>
+
+  </script>
   
