@@ -15,6 +15,7 @@ const router = createRouter({
             path: '/',
             name: 'login',
             component: loginView,
+            meta: { public: true },
         },
         {
             path: '/dashboard',
@@ -43,6 +44,27 @@ const router = createRouter({
         },
 
     ]
+})
+
+router.beforeEach((to, from, next) => {
+    const isLoggedIn = !!localStorage.getItem('user');
+    console.log('Authneticate user', isLoggedIn);
+
+    if (!to.meta.public && !isLoggedIn) {
+        return next({ name: 'login' });
+    }
+    if (to.meta.public && isLoggedIn) {
+        return next({ name: 'dashboard' });
+    }
+    else {
+        console.log('Navigating authneticated routes');
+        next();
+    }
+})
+
+router.beforeResolve(async (to, form, next) => {
+    console.log('Before Resolve');
+    await next();
 })
 
 export default router

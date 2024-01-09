@@ -134,7 +134,19 @@ export default {
             try {
                 const response = await axios.post('http://localhost:8000/api/login', this.user);
                 console.log(response);
-                this.$router.push({ name: 'dashboard' });
+                //managing user state
+                if(response.data && response.data.user){
+                    const userName  = response.data.user.name;
+                    localStorage.setItem('user', userName);
+                    console.log('User saved in Local storage :', localStorage.getItem('user'));
+                    this.$store.commit('LOGIN', response.data.user);
+                    console.log('User info saved in vuex store:', this.$store.state.user);
+                    this.$router.push({ name: 'dashboard' });
+                }
+                else{
+                    console.log('Unexpected response data :', response.data);
+                }
+               
             }
             catch (error) {
                 console.log('Error during login:', error);

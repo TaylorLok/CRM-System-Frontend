@@ -21,8 +21,14 @@ import { mapState, mapActions } from 'vuex';
                 <li class="nav-item">
                   <RouterLink class="nav-link" to="/clients">Client</RouterLink>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" v-if="isLoggedIn && $store.state.user">
+                  <p class="nav-link">{{ $store.state.user.name }}</p>
+                </li>
+                <li class="nav-item" v-if="!isLoggedIn">
                   <RouterLink class="nav-link" to="/">Login</RouterLink>
+                </li>
+                <li class="nav-item" v-if="isLoggedIn">
+                  <RouterLink class="nav-link" @click="logout" to="/">Logout</RouterLink>
                 </li>
               </ul>
             </div>
@@ -39,7 +45,15 @@ import { mapState, mapActions } from 'vuex';
 </template>
 
 <script>
-
+import { mapState, mapActions } from 'vuex';
+export default {
+  computed: {
+    ...mapState(['isLoggedIn'])
+  },
+  methods: {
+    ...mapActions(['logout'])
+  },
+}
 </script>
 
 <style>
