@@ -1,6 +1,15 @@
 <script setup>
+import { onMounted } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
 import { mapState, mapActions } from 'vuex';
+
+onMounted(() => {
+  let script = document.createElement('script');
+  script.src = 'https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-beta1/js/bootstrap.min.js';
+  script.integrity = 'sha384-pzjw8f+ua7Kw1TIq0v8FqFjcJ6pajs/rfdfs3SO+kD4Ck5BdPtF+to8xM6B5z6W5';
+  script.crossOrigin = 'anonymous';
+  document.head.append(script);
+});
 </script>
 <template>
   <div>
@@ -9,18 +18,18 @@ import { mapState, mapActions } from 'vuex';
       <div class="wrapper">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
           <div class="container-fluid">
-            <RouterLink class="navbar-brand" to="#">LOGO</RouterLink>
+            <RouterLink to="#" class="navbar-brand">LOGO</RouterLink>
             <button 
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-            >
-            <span class="navbar-toggler-icon"></span>
-            </button>
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+          >
+              <span class="navbar-toggler-icon"></span>
+          </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
@@ -30,7 +39,7 @@ import { mapState, mapActions } from 'vuex';
                   <RouterLink class="nav-link active" aria-current="page" to="">About us</RouterLink>
                 </li>
                 <li class="nav-item">
-                  <RouterLink class="nav-link" to="/clients">Client</RouterLink>
+                  <RouterLink to="/clients" class="nav-link">Client</RouterLink>
                 </li>
                 <li class="nav-item" v-if="isLoggedIn && $store.state.user">
                   <p class="nav-link">{{ $store.state.user.name }}</p>
@@ -56,7 +65,7 @@ import { mapState, mapActions } from 'vuex';
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+
 export default {
   computed: {
     ...mapState(['isLoggedIn'])
