@@ -74,9 +74,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-5 text-center">
-                            <p>&copy; {{ currentYear }} ARTFUNDI. Crafted by Taylor Lokombe</p>
-                        </div>
                     </div>
                 </div>
             </div>

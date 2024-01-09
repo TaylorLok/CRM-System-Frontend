@@ -2,18 +2,19 @@
 import { onMounted } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
 import { mapState, mapActions } from 'vuex';
+import Footer from '@/components/Footer.vue';
 
 onMounted(() => {
   let script = document.createElement('script');
   script.src = 'https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-beta1/js/bootstrap.min.js';
   script.integrity = 'sha384-pzjw8f+ua7Kw1TIq0v8FqFjcJ6pajs/rfdfs3SO+kD4Ck5BdPtF+to8xM6B5z6W5';
   script.crossOrigin = 'anonymous';
-  document.head.append(script);
+  // document.head.append(script);
 });
 </script>
 <template>
   <div>
-    <header>
+    <header v-if="isLoggedIn">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <div class="wrapper">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -60,6 +61,7 @@ onMounted(() => {
 
     <div class="container mt-5">
       <RouterView />
+      <Footer />
     </div>
   </div>
 </template>
