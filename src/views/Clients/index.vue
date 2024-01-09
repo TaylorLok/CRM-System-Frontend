@@ -49,10 +49,10 @@
                                 <td>{{ formatDate(client.created_at) }}</td>
                                 <td>
                                     <div class="d-flex">
-                                        <RouterLink :to="{ path: '/client/'+client.id+'/update'}" class="btn btn-success mr-2">
+                                        <RouterLink :to="{ path: '/client/'+client.id+'/update'}" class="btn btn-edit mr-2">
                                             Edit
                                         </RouterLink>
-                                        <button type="button" @click="deleteClient(client.id)" class="btn btn-danger">
+                                        <button type="button" @click="deleteClient(client.id)" class="btn btn-delete mr-2">
                                             Delete
                                         </button>
                                     </div> 
@@ -178,6 +178,18 @@
     margin-left: 10px;
 }
 .my-card {
-    margin-top: 20px; /* Adjust this value as needed */
+    margin-top: 20px;
+}
+.btn-edit {
+    background-color: #04ABC1; 
+    color: #ffffff;
+    margin-right: 5px;
+}
+.btn-delete{
+    margin-right: 10px !important;
+    background-color: #712011;
+    color: #ffffff;
+    padding: 5%;
+    
 }
 </style>
