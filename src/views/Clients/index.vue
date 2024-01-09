@@ -78,6 +78,7 @@
         name: 'clients',
         data() {
             return {
+                searchTerm:'',
                 clients: []
             }
         },
@@ -98,8 +99,6 @@
                     const response = await axios.get(`http://localhost:8000/api/clients`);
 
                     this.clients = response.data
-                    console.log(this.clients);
-                    
                 } 
                 catch (error) {
                     alert(error.response.data.message)
